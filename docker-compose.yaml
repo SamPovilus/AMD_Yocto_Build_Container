@@ -1,0 +1,21 @@
+services:
+  xilinx-yocto:
+    image: ubuntu:24.04
+    container_name: xilinx_yocto_builder
+    stdin_open: true
+    tty: true
+    environment:
+      - BB_ENV_PASSTHROUGH_ADDITIONS=DL_DIR SSTATE_DIR
+      - DL_DIR=/yocto/downloads/
+      - SSTATE_DIR=/yocto/sstate/
+    volumes:
+      - ${HOME}:${HOME}  # Mount your home directory
+      - ${HOME}/.bashrc:/home/spovilus/.bashrc  # Use your .bashrc in the container
+      - /yocto/downloads/:/yocto/downloads/  # Mount DL_DIR
+      - /yocto/sstate/:/yocto/sstate/        # Mount SSTATE_DIR
+      - /yocto-tmp/opt/:/yocto-tmp/opt/  # Mount /yocto-tmp/opt/
+      - ${HOME}/.bash_history:/home/spovilus/.bash_history  # Persistent bash history
+    working_dir: ${HOME}  # Set the working directory to your home directory
+    build:
+      context: .
+      dockerfile: Dockerfile
